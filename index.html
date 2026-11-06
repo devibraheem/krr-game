@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>KRR Explorer – Interactive Learning Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ==================== START SCREEN ==================== -->
+    <div id="startScreen" class="screen active">
+      <canvas id="particleCanvas"></canvas>
+      <div class="start-content">
+        <div class="logo-badge">KRR</div>
+        <h1 class="game-title">KRR Explorer</h1>
+        <p class="game-subtitle">Natural Language Representations &amp; Reasoning</p>
+        <p class="game-tagline">Animated Interactive Concept Sessions &bull; 13 Challenge Levels &bull; No MCQs</p>
+        
+        <div class="start-actions">
+          <button id="startLearnBtn" class="btn btn-primary btn-glow start-main-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>1. Learn Concepts First (Animated)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          
+          <button id="startGameDirectBtn" class="btn btn-hint start-sub-btn">
+            <span>2. Jump Directly to Game Levels 🎮</span>
+          </button>
+        </div>
+
+        <div class="start-stats">
+          <div class="stat"><span class="stat-num">14</span><span class="stat-lbl">Concept Topics</span></div>
+          <div class="stat"><span class="stat-num">13</span><span class="stat-lbl">Game Levels</span></div>
+          <div class="stat"><span class="stat-num">80+</span><span class="stat-lbl">Keywords</span></div>
+          <div class="stat"><span class="stat-num">124</span><span class="stat-lbl">Puzzles</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== INTERACTIVE LEARN SCREEN ==================== -->
+    <div id="learnScreen" class="screen">
+      <div class="learn-header">
+        <button id="learnBackToStartBtn" class="btn btn-hint" title="Return to start screen">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Menu</span>
+        </button>
+        <div class="learn-header-center">
+          <span class="learn-badge">Interactive Concept Walkthrough</span>
+          <span id="learnSectionTitle" class="learn-header-title">Welcome to KRR</span>
+        </div>
+        <div class="learn-header-actions">
+          <span id="learnCounter" class="learn-counter">1 / 14</span>
+          <button id="skipToGameBtn" class="btn btn-primary skip-btn">
+            <span>Play Game 🎮</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="learnScroll" class="learn-scroll">
+        <div id="learnArea" class="learn-area">
+          <!-- Dynamically populated by learn-session.js -->
+        </div>
+      </div>
+
+      <div class="learn-footer">
+        <button id="learnPrevBtn" class="btn btn-hint">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Previous</span>
+        </button>
+        <div id="learnDots" class="learn-dots"></div>
+        <button id="learnNextBtn" class="btn btn-primary btn-glow">
+          <span>Continue</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== GAME SCREEN ==================== -->
+    <div id="gameScreen" class="screen">
+      <div class="game-header">
+        <div class="header-left">
+          <span id="levelBadge" class="level-badge">1</span>
+          <div class="level-meta">
+            <span id="levelLabel" class="level-label"></span>
+            <span id="sectionLabel" class="section-label"></span>
+          </div>
+        </div>
+        <div class="header-center">
+          <div class="progress-track">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+          <span id="progressText" class="progress-text">0 / 0</span>
+        </div>
+        <div class="header-right">
+          <button id="gameReviewBtn" class="btn btn-hint" title="Review concept cards for this level">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            <span>Learn</span>
+          </button>
+          <div class="score-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700"><polygon points="12 2 15 9 23 9 17 14 19 22 12 17 5 22 7 14 1 9 9 9"/></svg>
+            <span id="scoreDisplay">0</span>
+          </div>
+          <button id="hintBtn" class="btn btn-hint" title="Get a hint">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>Hint</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="level-intro" id="levelIntro">
+        <h2 id="levelTitle"></h2>
+        <p id="levelDesc"></p>
+        <div id="levelInstructions" class="instructions"></div>
+      </div>
+
+      <div id="gameArea" class="game-area"></div>
+      <div id="feedbackOverlay" class="feedback-overlay hidden"></div>
+    </div>
+
+    <!-- ==================== LEVEL COMPLETE SCREEN ==================== -->
+    <div id="levelCompleteScreen" class="screen">
+      <div class="complete-card">
+        <div class="confetti-container" id="confettiContainer"></div>
+        <h2 class="complete-title">Level Complete!</h2>
+        <div id="starsDisplay" class="stars-display"></div>
+        <div class="complete-stats">
+          <div class="cstat"><span class="cstat-val" id="lcCorrect">0</span><span class="cstat-lbl">Correct</span></div>
+          <div class="cstat"><span class="cstat-val" id="lcMistakes">0</span><span class="cstat-lbl">Mistakes</span></div>
+          <div class="cstat"><span class="cstat-val" id="lcScore">0</span><span class="cstat-lbl">Points</span></div>
+        </div>
+        <p id="conceptsCovered" class="concepts-covered"></p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button id="nextLevelBtn" class="btn btn-primary btn-glow">
+            <span>Next Level</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FINAL SUMMARY SCREEN ==================== -->
+    <div id="summaryScreen" class="screen">
+      <div class="summary-card">
+        <h2 class="summary-title">🎓 Congratulations!</h2>
+        <p class="summary-sub">You've completed all 13 levels of KRR Explorer</p>
+        <div class="final-score-ring">
+          <svg viewBox="0 0 120 120" class="score-ring">
+            <circle cx="60" cy="60" r="54" stroke="#1e293b" stroke-width="8" fill="none"/>
+            <circle id="scoreRing" cx="60" cy="60" r="54" stroke="#3b82f6" stroke-width="8" fill="none"
+                    stroke-dasharray="339.292" stroke-dashoffset="339.292" stroke-linecap="round"
+                    transform="rotate(-90 60 60)"/>
+          </svg>
+          <div class="ring-label">
+            <span id="finalScoreNum" class="ring-num">0</span>
+            <span class="ring-txt">points</span>
+          </div>
+        </div>
+        <div id="summaryLevels" class="summary-levels"></div>
+        <div id="conceptMap" class="concept-map"></div>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button id="reviewAllConceptsBtn" class="btn btn-hint">
+            <span>📖 Review All Concepts</span>
+          </button>
+          <button id="restartBtn" class="btn btn-primary btn-glow">
+            <span>Play Again 🎮</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating drag ghost -->
+  <div id="dragGhost" class="drag-ghost"></div>
+
+  <script src="game-data.js"></script>
+  <script src="learn-session.js"></script>
+  <script src="game-engine.js"></script>
+</body>
+</html>
